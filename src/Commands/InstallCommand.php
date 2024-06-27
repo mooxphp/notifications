@@ -1,6 +1,6 @@
 <?php
 
-namespace Moox\Builder\Commands;
+namespace Moox\Notification\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
@@ -20,14 +20,14 @@ class InstallCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'mooxbuilder:install';
+    protected $signature = 'mooxnotifications:install';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Installs Moox Builder, publishes configuration, migrations and registers plugins.';
+    protected $description = 'Installs Moox Notification, publishes configuration, migrations and registers plugins.';
 
     /**
      * Execute the console command.
@@ -66,42 +66,42 @@ class InstallCommand extends Command
 
     public function welcome(): void
     {
-        info('Welcome to Moox Builder Installer');
+        info('Welcome to Moox Notification Installer');
     }
 
     public function publishConfiguration(): void
     {
         if (confirm('Do you wish to publish the configuration?', true)) {
-            if (! File::exists('config/builder.php')) {
-                info('Publishing Builder Configuration...');
-                $this->callSilent('vendor:publish', ['--tag' => 'builder-config']);
+            if (! File::exists('config/notifications.php')) {
+                info('Publishing Notification Configuration...');
+                $this->callSilent('vendor:publish', ['--tag' => 'notifications-config']);
 
                 return;
             }
-            warning('The Builder config already exist. The config will not be published.');
+            warning('The Notification config already exist. The config will not be published.');
         }
     }
 
-    public function publishMigrations(): void
-    {
-        if (confirm('Do you wish to publish the migrations?', true)) {
-            if (Schema::hasTable('items')) {
-                warning('The items table already exists. The migrations will not be published.');
+    // public function publishMigrations(): void
+    // {
+    //     if (confirm('Do you wish to publish the migrations?', true)) {
+    //         if (Schema::hasTable('notifications')) {
+    //             warning('The notifications table already exists. The migrations will not be published.');
 
-                return;
-            }
-            info('Publishing Items Migrations...');
-            $this->callSilent('vendor:publish', ['--tag' => 'builder-migrations']);
-        }
-    }
+    //             return;
+    //         }
+    //         info('Publishing Notifications Migrations...');
+    //         $this->callSilent('vendor:publish', ['--tag' => 'notifications-migrations']);
+    //     }
+    // }
 
-    public function runMigrations(): void
-    {
-        if (confirm('Do you wish to run the migrations?', true)) {
-            info('Running Builder Migrations...');
-            $this->callSilent('migrate');
-        }
-    }
+    // public function runMigrations(): void
+    // {
+    //     if (confirm('Do you wish to run the migrations?', true)) {
+    //         info('Running Notification Migrations...');
+    //         $this->callSilent('migrate');
+    //     }
+    // }
 
     public function registerPlugins(): void
     {
@@ -112,12 +112,12 @@ class InstallCommand extends Command
 
             $intend = '                ';
 
-            $namespace = "\Moox\Builder";
+            $namespace = "\Moox\Notification";
 
             $pluginsToAdd = multiselect(
                 label: 'These plugins will be installed:',
-                options: ['BuilderPlugin'],
-                default: ['BuilderPlugin'],
+                options: ['NotificationPlugin'],
+                default: ['NotificationPlugin'],
             );
 
             $function = '::make(),';
@@ -158,6 +158,6 @@ class InstallCommand extends Command
 
     public function finish(): void
     {
-        note('Moox Builder installed successfully. Enjoy!');
+        note('Moox Notification installed successfully. Enjoy!');
     }
 }
